@@ -22,7 +22,8 @@ function(ctx, args) {
   // order prevents false positive for e.g. c002 when it's actually c002_complement
   let locks = [
     { type: 'EZ_21', pws: passwords },
-    { type: 'EZ_35', pws: digits },
+    { type: 'EZ_35', pws: passwords },
+    { type: 'digit', pws: digits },
     { type: 'EZ_40', pws: passwords },
     { type: 'ez_prime', pws: primes },
     { type: 'c001', pws: colors },
