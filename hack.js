@@ -10,7 +10,8 @@ function(ctx, args) {
   let needsCrack = function(lock) {
     // see if msg from server has name of lock... but not followed by an underscore!
     // (this prevents false positive for e.g. c002 when it's actually c002_complement)
-    return msg.indexOf(lock.type) > -1 && msg.indexOf(lock.type + '_' === -1)
+    //return msg.indexOf(lock.type) > -1 && msg.indexOf(lock.type + '_' === -1)
+    return msg.indexOf(lock.type) > -1
   }
 
   // each of the password sets we might need for a lock
@@ -27,16 +28,17 @@ function(ctx, args) {
     { type: 'ez_prime', pws: primes },
     { type: 'c001', pws: colors },
     { type: 'color_digit', pws: digits },
-    { type: 'c002', pws: colors },
     { type: 'c002_complement', pws: colors },
-    { type: 'c003', pws: colors },
-    { type: 'c003_triad_1', pws: colors },
+    { type: 'c002', pws: colors },
     { type: 'c003_triad_2', pws: colors },
+    { type: 'c003_triad_1', pws: colors },
+    { type: 'c003', pws: colors },
   ];
 
   // recursively hack until we have keys to crack all locks
   (function hack() {
     let lock = locks.find(needsCrack) // gets next lock to crack
+    #s.chats.tell({to: "esc", msg: "cracking " + JSON.stringify(lock)})
     let result = #s.esc.crack({type: lock.type, pws: lock.pws, target: args.target, keys})
     // if the crack failed or we got the same error msg twice, abort hack
     let crackFailed = !result.ok
