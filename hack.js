@@ -37,10 +37,6 @@ function(ctx, args) {
   // recursively hack until we have keys to crack all locks
   (function hack() {
     let lock = locks.find(needsCrack) // gets next lock to crack
-    // if no locks need cracking, we're done!
-    if (!lock) {
-      return;
-    }
     let result = #s.esc.crack({type: lock.type, pws: lock.pws, target: args.target, keys})
     // if the crack failed or we got the same error msg twice, abort hack
     let crackFailed = !result.ok
@@ -51,8 +47,10 @@ function(ctx, args) {
     }
     // otherwise, crack was successful
     msg = result.msg
-    // TODO: at this point, msg will start with 'Received' if our hack was successful
-    // should we use this to break out of the loop instead of checking to see if no locks need breaking?
+    if (msg.indexOf('Received') > -1) {
+      // got the credits! we're done!
+      return
+    }
     Object.assign(keys, result.key) // update our keys
     hack() // move onto next lock
   }())
