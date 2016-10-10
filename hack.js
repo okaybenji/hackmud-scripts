@@ -51,6 +51,8 @@ function(ctx, args) {
     }
     // otherwise, crack was successful
     msg = result.msg
+    // TODO: at this point, msg will start with 'Received' if our hack was successful
+    // should we use this to break out of the loop instead of checking to see if no locks need breaking?
     Object.assign(keys, result.key) // update our keys
     hack() // move onto next lock
   }())
