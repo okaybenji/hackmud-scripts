@@ -2,7 +2,6 @@ function(ctx, args) {
   if (!args || !args.target || !args.pws || !args.type) {
     return { ok: true, msg: 'target, pws (passwords array) and type (lock name) req\'d'}
   }
-#s.chats.tell({to: "esc", msg: "cracking " + args.type + " with pws: " + JSON.stringify(args.pws) + " and keys: " + JSON.stringify(args.keys)})
   let msg
   let keys = args.keys || {}
   let ok = false
@@ -24,7 +23,6 @@ function(ctx, args) {
 
   if (key) {
     ok = true
-    #s.chats.tell({to: "esc", msg: "key for " + args.type + " is " + JSON.stringify(key)})
   }
 
   return { ok, msg, key: key || {} };

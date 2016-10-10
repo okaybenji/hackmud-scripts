@@ -8,9 +8,7 @@ function(ctx, args) {
 
   // checks to see if current result is a particular type of lock error
   let needsCrack = function(lock) {
-    // see if msg from server has name of lock... but not followed by an underscore!
-    // (this prevents false positive for e.g. c002 when it's actually c002_complement)
-    //return msg.indexOf(lock.type) > -1 && msg.indexOf(lock.type + '_' === -1)
+    // see if msg from server has name of lock
     return msg.indexOf(lock.type) > -1
   }
 
@@ -21,6 +19,7 @@ function(ctx, args) {
   let colors = ['red', 'orange', 'yellow', 'green', 'lime', 'blue', 'cyan', 'purple']
 
   // each of the lock types we might have to crack and the pws they use
+  // order prevents false positive for e.g. c002 when it's actually c002_complement
   let locks = [
     { type: 'EZ_21', pws: passwords },
     { type: 'EZ_35', pws: digits },
@@ -30,15 +29,18 @@ function(ctx, args) {
     { type: 'color_digit', pws: digits },
     { type: 'c002_complement', pws: colors },
     { type: 'c002', pws: colors },
-    { type: 'c003_triad_2', pws: colors },
     { type: 'c003_triad_1', pws: colors },
+    { type: 'c003_triad_2', pws: colors },
     { type: 'c003', pws: colors },
   ];
 
   // recursively hack until we have keys to crack all locks
   (function hack() {
     let lock = locks.find(needsCrack) // gets next lock to crack
-    #s.chats.tell({to: "esc", msg: "cracking " + JSON.stringify(lock)})
+    if (!lock) {
+      // breached! we're done!
+      return
+    }
     let result = #s.esc.crack({type: lock.type, pws: lock.pws, target: args.target, keys})
     // if the crack failed or we got the same error msg twice, abort hack
     let crackFailed = !result.ok
@@ -50,13 +52,12 @@ function(ctx, args) {
     // otherwise, crack was successful
     msg = result.msg
     if (msg.indexOf('Received') > -1) {
-      // got the credits! we're done!
+      // got credits! we're done!
       return
     }
     Object.assign(keys, result.key) // update our keys
     hack() // move onto next lock
   }())
   
-//  return { ok: ok, msg: JSON.stringify(keys) + msg }
   return { ok, msg }
 }
