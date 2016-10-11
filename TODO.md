@@ -1,0 +1,1 @@
+Right now, hack.js relies on the locks array being ordered correctly, because it only checks that the name of the lock is in the string returned from the server. Update the needsCrack method to better verify which lock needs cracking.
