@@ -44,7 +44,7 @@ function(ctx, args) {
       // breached! we're done!
       return
     }
-    l.log('cracking lock: ' + JSON.stringify(lock) + ' with keys: ' + JSON.stringify(keys))
+    l.log('cracking lock: ' + JSON.stringify(lock) + ' with keys: ' + JSON.stringify(keys) + '\n')
     let result = #s.esc.crack({type: lock.type, pws: lock.pws, target: args.target, keys})
     // if the crack failed or we got the same error msg twice, abort hack
     let crackFailed = !result.ok
@@ -64,5 +64,5 @@ function(ctx, args) {
   }())
   
   return { ok, msg }
-  // return { ok, msg: [msg, l.get_log()] }
+  //return { ok, msg: [msg, l.get_log()] } // enable logging
 }
