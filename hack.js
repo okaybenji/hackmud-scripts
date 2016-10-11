@@ -29,12 +29,12 @@ function(ctx, args) {
     { type: 'digit', pws: digits },
     { type: 'EZ_40', pws: passwords },
     { type: 'ez_prime', pws: primes },
-    { type: 'c001', pws: colors },
-    { type: 'c002_complement', pws: colors },
-    { type: 'c002', pws: colors },
     { type: 'c003_triad_1', pws: colors },
     { type: 'c003_triad_2', pws: colors },
     { type: 'c003', pws: colors },
+    { type: 'c002_complement', pws: colors },
+    { type: 'c002', pws: colors },
+    { type: 'c001', pws: colors },
   ];
 
   // recursively hack until we have keys to crack all locks
@@ -44,7 +44,7 @@ function(ctx, args) {
       // breached! we're done!
       return
     }
-    // l.log('cracking lock: ' + JSON.stringify(lock) + ' with keys: ' + JSON.stringify(keys))
+    l.log('cracking lock: ' + JSON.stringify(lock) + ' with keys: ' + JSON.stringify(keys))
     let result = #s.esc.crack({type: lock.type, pws: lock.pws, target: args.target, keys})
     // if the crack failed or we got the same error msg twice, abort hack
     let crackFailed = !result.ok
@@ -63,6 +63,6 @@ function(ctx, args) {
     hack() // move onto next lock
   }())
   
-  //return { ok, msg }
-  return {ok, msg: [msg, l.get_log()]}
+  return { ok, msg }
+  // return { ok, msg: [msg, l.get_log()] }
 }
