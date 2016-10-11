@@ -2,6 +2,7 @@ function(ctx, args) {
   if (!args || !args.target) {
     return { ok: true, msg: 'target required, e.g. #s.user.name'}
   }
+  let l = #s.scripts.lib()
   let keys = {}
   let ok = true
   let msg = args.target.call(keys) // get initial call result and lock error
@@ -20,14 +21,15 @@ function(ctx, args) {
 
   // each of the lock types we might have to crack and the pws they use
   // order prevents false positive for e.g. c002 when it's actually c002_complement
+  // or digit when it's color_digit
   let locks = [
     { type: 'EZ_21', pws: passwords },
     { type: 'EZ_35', pws: passwords },
+    { type: 'color_digit', pws: digits },
     { type: 'digit', pws: digits },
     { type: 'EZ_40', pws: passwords },
     { type: 'ez_prime', pws: primes },
     { type: 'c001', pws: colors },
-    { type: 'color_digit', pws: digits },
     { type: 'c002_complement', pws: colors },
     { type: 'c002', pws: colors },
     { type: 'c003_triad_1', pws: colors },
@@ -42,6 +44,7 @@ function(ctx, args) {
       // breached! we're done!
       return
     }
+    // l.log('cracking lock: ' + JSON.stringify(lock) + ' with keys: ' + JSON.stringify(keys))
     let result = #s.esc.crack({type: lock.type, pws: lock.pws, target: args.target, keys})
     // if the crack failed or we got the same error msg twice, abort hack
     let crackFailed = !result.ok
@@ -60,5 +63,6 @@ function(ctx, args) {
     hack() // move onto next lock
   }())
   
-  return { ok, msg }
+  //return { ok, msg }
+  return {ok, msg: [msg, l.get_log()]}
 }
