@@ -19,11 +19,11 @@ function(ctx, args) {
       let gotResult = typeof msg === 'string'
       let wasSuccess = gotResult && msg.indexOf('correct') === -1
       return wasSuccess
-    });
+    })
 
   if (key) {
     ok = true
   }
 
-  return { ok, msg, key: key || {} };
+  return { ok, msg, key: key || {} }
 }
