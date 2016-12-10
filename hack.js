@@ -35,7 +35,7 @@ function(ctx, args) {
     { type: 'c002_complement', pws: colors },
     { type: 'c002', pws: colors },
     { type: 'c001', pws: colors },
-  ];
+  ]
 
   // recursively hack until we have keys to crack all locks
   (function hack() {
